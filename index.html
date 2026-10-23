@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123b66">
+  <meta name="description" content="Quick access to hospital and laboratory data entry forms.">
+  <title>Hospital &amp; Lab Portal</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --navy: #123b66;
+      --navy-deep: #0b2948;
+      --blue: #2474c6;
+      --teal: #16877a;
+      --purple: #8754b5;
+      --amber: #bd7918;
+      --ink: #172b43;
+      --muted: #64748b;
+      --line: #e1e8f0;
+      --surface: #ffffff;
+      --page: #f3f7fb;
+      --shadow: 0 12px 30px rgba(24, 52, 82, .07);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at 85% 0%, rgba(36,116,198,.10), transparent 34rem),
+        var(--page);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+    a { color: inherit; }
+    .shell { width: min(1080px, calc(100% - 36px)); margin: 0 auto; }
+    header { padding: 28px 0 18px; }
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .brand-mark {
+      width: 54px; height: 54px; display: grid; place-items: center;
+      flex: 0 0 auto; border-radius: 17px; color: #fff;
+      background: linear-gradient(145deg, #1b5a91, var(--navy-deep));
+      box-shadow: 0 8px 20px rgba(18,59,102,.18);
+    }
+    .brand-mark svg { width: 29px; height: 29px; }
+    .brand h1 { margin: 0; font-size: clamp(1.2rem, 2.5vw, 1.65rem); letter-spacing: -.035em; color: var(--navy); }
+    .brand p { margin: 3px 0 0; font-size: .92rem; color: var(--muted); }
+    main { padding: 25px 0 52px; }
+    .intro { margin-bottom: 24px; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 7px; color: var(--blue);
+      font-weight: 750; font-size: .76rem; letter-spacing: .11em; text-transform: uppercase;
+    }
+    .eyebrow::before { content: ""; width: 20px; height: 2px; border-radius: 2px; background: currentColor; }
+    .intro h2 { margin: 9px 0 8px; font-size: clamp(1.7rem, 4vw, 2.45rem); letter-spacing: -.045em; line-height: 1.15; color: var(--navy-deep); }
+    .intro p { max-width: 610px; margin: 0; color: var(--muted); font-size: 1rem; }
+    .section-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 27px 0 14px; }
+    .section-head h3 { margin: 0; font-size: 1rem; color: var(--navy); }
+    .count { color: var(--muted); font-size: .8rem; white-space: nowrap; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .form-card {
+      --accent: var(--blue);
+      position: relative; display: flex; flex-direction: column; min-height: 188px;
+      padding: 22px; border: 1px solid var(--line); border-radius: 20px;
+      background: rgba(255,255,255,.94); text-decoration: none;
+      box-shadow: var(--shadow); overflow: hidden;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .form-card::after {
+      content: ""; position: absolute; width: 110px; height: 110px; right: -45px; top: -48px;
+      border-radius: 50%; background: var(--accent); opacity: .06; pointer-events: none;
+    }
+    .form-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--accent) 40%, white); box-shadow: 0 17px 34px rgba(24,52,82,.11); }
+    .form-card:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 55%, white); outline-offset: 3px; }
+    .form-card.teal { --accent: var(--teal); }
+    .form-card.purple { --accent: var(--purple); }
+    .form-card.amber { --accent: var(--amber); }
+    .form-card.visit { --accent: #3266b1; grid-column: 1 / -1; min-height: 154px; }
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .icon-box {
+      width: 48px; height: 48px; border-radius: 15px; display: grid; place-items: center;
+      color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, white);
+    }
+    .icon-box svg { width: 25px; height: 25px; stroke: currentColor; }
+    .arrow {
+      width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%;
+      color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, white);
+    }
+    .arrow svg { width: 17px; height: 17px; }
+    .card-copy { margin-top: 17px; }
+    .card-copy h4 { margin: 0 0 5px; color: var(--navy-deep); font-size: 1.08rem; letter-spacing: -.02em; }
+    .card-copy p { margin: 0; color: var(--muted); font-size: .9rem; }
+    .card-action { display: inline-flex; align-items: center; gap: 7px; margin-top: 16px; color: var(--accent); font-weight: 750; font-size: .85rem; }
+    .card-action svg { width: 15px; height: 15px; transition: transform .18s ease; }
+    .form-card:hover .card-action svg { transform: translateX(3px); }
+    .visit .visit-layout { display: flex; align-items: center; gap: 17px; }
+    .visit .card-copy { margin-top: 0; flex: 1; }
+    .visit .card-action { margin-top: 12px; }
+    .note {
+      display: flex; align-items: flex-start; gap: 11px; margin-top: 23px; padding: 15px 17px;
+      border: 1px solid #dce7f2; border-radius: 14px; background: #edf4fb; color: #45617d; font-size: .85rem;
+    }
+    .note svg { width: 19px; height: 19px; flex: 0 0 auto; margin-top: 1px; }
+    footer { border-top: 1px solid var(--line); padding: 18px 0 25px; color: #7b8a9c; font-size: .8rem; }
+    footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    @media (max-width: 600px) {
+      .shell { width: min(100% - 24px, 520px); }
+      header { padding-top: 20px; }
+      main { padding-top: 22px; }
+      .grid { grid-template-columns: 1fr; gap: 12px; }
+      .form-card { min-height: 170px; padding: 19px; }
+      .form-card.visit { grid-column: auto; min-height: 170px; }
+      .visit .visit-layout { align-items: flex-start; }
+      .visit .card-copy { margin-top: 3px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="shell">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 21V7l9-4 9 4v14"/><path d="M9 21v-6h6v6"/><path d="M12 7v6M9 10h6"/>
+          </svg>
+        </div>
+        <div>
+          <h1>Hospital &amp; Lab Portal</h1>
+          <p>Management dashboard · Quick access</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="intro" aria-labelledby="page-title">
+      <span class="eyebrow">Form directory</span>
+      <h2 id="page-title">Your forms, all in one place.</h2>
+      <p>Choose a form below to open it in Google Forms. Use this dashboard for quick, convenient access while managing hospital, laboratory, and visit information.</p>
+    </section>
+
+    <div class="section-head">
+      <h3>Data entry forms</h3>
+      <span class="count">5 forms · Quick links</span>
+    </div>
+
+    <section class="grid" aria-label="Google Forms links">
+      <a class="form-card" href="https://docs.google.com/forms/d/e/1FAIpQLSenciq0HsUspYz1AerUHVWoTOF8AahhtOM955V7xiDleYkzNA/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer">
+        <div class="card-top">
+          <span class="icon-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V7l9-4 9 4v14"/><path d="M9 21v-6h6v6"/><path d="M12 7v5M9.5 9.5h5"/></svg>
+          </span>
+          <span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+        </div>
+        <div class="card-copy"><h4>Hospital Details</h4><p>Enter or review hospital information.</p></div>
+        <span class="card-action">Open form <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+
+      <a class="form-card teal" href="https://docs.google.com/forms/d/e/1FAIpQLSedCFFxIqZXQ8cvUfZeITKWhlDaDWsEtgCH9fR0D0M4o1jujA/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer">
+        <div class="card-top">
+          <span class="icon-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6.2L4.8 18a2 2 0 0 0 1.7 3h11a2 2 0 0 0 1.7-3L14 9.2V3"/><path d="M7 16h10M9 13h6"/></svg>
+          </span>
+          <span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+        </div>
+        <div class="card-copy"><h4>Lab Details</h4><p>Access laboratory information and details.</p></div>
+        <span class="card-action">Open form <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+
+      <a class="form-card purple" href="https://docs.google.com/forms/d/e/1FAIpQLSfq0lSjU-GR0IZyBxNcy8OJQvcgEn38EJXXPr_isVIhD4hvXQ/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer">
+        <div class="card-top">
+          <span class="icon-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V8l9-5 9 5v13"/><path d="M7 21v-7h10v7M12 7v5M9.5 9.5h5"/></svg>
+          </span>
+          <span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+        </div>
+        <div class="card-copy"><h4>New Hospitals</h4><p>Register a new hospital entry.</p></div>
+        <span class="card-action">Open form <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+
+      <a class="form-card amber" href="https://docs.google.com/forms/d/e/1FAIpQLSf_ocuF0lheohgCGFo_kWw1msocpaimpJjC_9sNhu8WNkrsVg/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer">
+        <div class="card-top">
+          <span class="icon-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10v4H7zM5 7h14v14H5z"/><path d="M8 12h8M8 16h5"/></svg>
+          </span>
+          <span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+        </div>
+        <div class="card-copy"><h4>New Lab</h4><p>Register a new laboratory entry.</p></div>
+        <span class="card-action">Open form <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+
+      <a class="form-card visit" href="https://docs.google.com/forms/d/e/1FAIpQLSeDCnzOFBCG9xZstlrtgQUrKdcFPsvcPHMpGFJUfthnNlttGw/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer">
+        <div class="visit-layout">
+          <span class="icon-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18M8 14l2.5 2.5L16 12"/></svg>
+          </span>
+          <div class="card-copy"><h4>Visits</h4><p>Record hospital or laboratory visit information.</p><span class="card-action">Open form <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+          <span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+        </div>
+      </a>
+    </section>
+
+    <aside class="note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+      <div><strong>Quick tip:</strong> Forms open in a new tab, so this dashboard stays available. Make sure each Google Form is published and its responder access settings allow the intended users to open it.</div>
+    </aside>
+  </main>
+
+  <footer><div class="shell"><span>Hospital &amp; Lab Portal</span><span>Quick access to your Google Forms</span></div></footer>
+</body>
+</html>
